@@ -1,0 +1,38 @@
+[package]
+name = "auto-clicker"
+version = "1.0.0"
+description = "AutoClicker - Windows 连点助手"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rdev = "0.5"
+rand = "0.8"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+winapi = { version = "0.3", features = [
+  "winuser",
+  "winbase",
+  "timeapi",
+  "utilapiset",
+  "shellapi",
+  "processthreadsapi",
+  "securitybaseapi",
+  "winnt",
+  "handleapi",
+  "synchapi",
+  "errhandlingapi",
+  "commdlg",
+] }
+
+[profile.release]
+strip = true
+# GNU 工具链 + 完整 LTO 下 WH_KEYBOARD_LL 低级键盘钩子的回调不会被调用，
+# 全局热键会静默失效（实测 debug/无 LTO 正常）；这里保留体积优化但关闭 LTO。
+lto = false
+codegen-units = 1
+opt-level = "s"
